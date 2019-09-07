@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+//---------------------------------------------------------------------
+// Name: PlayerMover
+// Desc: This controls player movement according to BPM
+//---------------------------------------------------------------------
+
 public class PlayerMover : AudioBasedMover
 {
     private KeyCode _upKeyCode       = KeyCode.W;

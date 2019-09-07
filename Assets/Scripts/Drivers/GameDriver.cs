@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+//---------------------------------------------------------------------
+// Name: GameDriver
+// Desc: This controls central game logic
+//---------------------------------------------------------------------
+
 public class GameDriver : MonoBehaviour
 {
     [Serializable]
