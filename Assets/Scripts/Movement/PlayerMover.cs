@@ -17,7 +17,6 @@ public class PlayerMover : AudioBasedMover
     // Update is called once per frame
     void Update()
     {
-        // TODO: Maybe add an "Invalid" to MoveDirection so that I don't have to do this?
         MoveDirection newDirection = MoveDirection.Invalid;
 
         if (Input.GetKeyDown(_upKeyCode)) {

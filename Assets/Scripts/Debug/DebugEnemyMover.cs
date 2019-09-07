@@ -12,7 +12,6 @@ public class DebugEnemyMover : AudioBasedMover
     protected override void OnBeatWindowStarted() {
         base.OnBeatWindowStarted();
 
-        // Again, maybe we want an invalid here...
         MoveDirection randomDirection = MoveDirection.Invalid;
 
         // Keep trying directions with valid movements

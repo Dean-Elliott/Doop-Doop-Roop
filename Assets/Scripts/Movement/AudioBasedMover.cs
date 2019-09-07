@@ -60,13 +60,6 @@ public abstract class AudioBasedMover : MonoBehaviour
             }
         }
 
-        if (!isOnBeat) {
-            Debug.Log("Could not move because off beat.");
-        }
-
-        if (!CanMoveinDirection(direction)) {
-            Debug.Log("Could not move because blocked");
-        }
         return false;
     }
 
