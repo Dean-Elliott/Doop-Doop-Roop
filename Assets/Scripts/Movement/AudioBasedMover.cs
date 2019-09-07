@@ -9,15 +9,20 @@ using UnityEngine;
 
 public abstract class AudioBasedMover : MonoBehaviour
 {
+    [SerializeField]
+    [Tooltip("The distance we cast a ray to check for collisions before moving")]
+    public static float movementRaycastDistance = 1.5f;
+
     // For keeping movement atomic
     public enum MoveDirection {
+        Invalid,
         Up,
         Down,
         Left,
         Right
     }
 
-    public bool canMove { get; private set; }
+    public bool isOnBeat { get; private set; }
 
     protected virtual void Start() {
         if (AudioDriver.instance == null) {
@@ -33,26 +38,41 @@ public abstract class AudioBasedMover : MonoBehaviour
     // I would like to keep these private, but because this class is abstract I can't 
     // The best we can do is protected, so DON'T TOUCH THESE lest you break some movement logic
     protected virtual void OnBeatWindowStarted() {
-        canMove = true;
+        isOnBeat = true;
     }
 
     protected virtual void OnBeatWindowEnded() {
-        canMove = false;
+        isOnBeat = false;
     }
 
-    // Handly little template method design pattern here :) 
     public bool Move(MoveDirection direction) {
-        if (canMove) {
+        if (isOnBeat && CanMoveinDirection(direction)) {
 
-            transform.position += GetMoveDirectionVector(direction);
+            Vector3 moveDirection = GetMoveDirectionVector(direction);
 
-            // Ensures we only move once per valid beat window
-            canMove = false;
+            if (moveDirection != Vector3.zero) {
+                transform.position += moveDirection;
 
-            return true;
+                // Ensures we only move once per valid beat window
+                isOnBeat = false;
+
+                return true;
+            }
         }
 
+        if (!isOnBeat) {
+            Debug.Log("Could not move because off beat.");
+        }
+
+        if (!CanMoveinDirection(direction)) {
+            Debug.Log("Could not move because blocked");
+        }
         return false;
+    }
+
+    private bool CanMoveinDirection(MoveDirection desiredDirection) {
+        // TODO: Set up the layer mask for this raycast to save on physics calculations
+        return !Physics.Raycast(transform.position, GetMoveDirectionVector(desiredDirection), movementRaycastDistance);
     }
 
     private Vector3 GetMoveDirectionVector(MoveDirection direction) {
@@ -60,21 +80,24 @@ public abstract class AudioBasedMover : MonoBehaviour
 
         switch (direction) {
             case MoveDirection.Up: {
-                    moveVector = Vector3.forward;
-                    break;
-                }
+                moveVector = Vector3.forward;
+                break;
+            }
             case MoveDirection.Down: {
-                    moveVector = -Vector3.forward;
-                    break;
-                }
+                moveVector = -Vector3.forward;
+                break;
+            }
             case MoveDirection.Left: {
-                    moveVector = -Vector3.right;
-                    break;
-                }
+                moveVector = -Vector3.right;
+                break;
+            }
             case MoveDirection.Right: {
-                    moveVector = Vector3.right;
-                    break;
-                }
+                moveVector = Vector3.right;
+                break;
+            }
+            default: {
+                break;
+            }
         }
 
         return moveVector;

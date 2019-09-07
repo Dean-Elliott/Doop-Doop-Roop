@@ -17,17 +17,26 @@ public class PlayerMover : AudioBasedMover
     // Update is called once per frame
     void Update()
     {
+        // TODO: Maybe add an "Invalid" to MoveDirection so that I don't have to do this?
+        MoveDirection newDirection = MoveDirection.Invalid;
+
         if (Input.GetKeyDown(_upKeyCode)) {
-            Move(MoveDirection.Up);
+            newDirection = MoveDirection.Up;
 
         } else if (Input.GetKeyDown(_downKeyCode)) {
-            Move(MoveDirection.Down);
-
+            newDirection = MoveDirection.Down;
+            
         } else if (Input.GetKeyDown(_leftKeyCode)) {
-            Move(MoveDirection.Left);
-
+            newDirection = MoveDirection.Left;
+            
         } else if (Input.GetKeyDown(_rightKeyCode)) {
-            Move(MoveDirection.Right);
+            newDirection = MoveDirection.Right;
+        }
+
+        if (newDirection != MoveDirection.Invalid) {
+            if (!Move(newDirection)){
+                Debug.Log("Could not move player in direction " + newDirection.ToString());
+            }
         }
     }
 }
